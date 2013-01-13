@@ -1,2 +1,3 @@
-KeePassToRdp/bin/*
-KeePassToRdp/obj/*
+KeePassToRdp/[Bb]in/
+KeePassToRdp/[Oo]bj/
+*.suo
