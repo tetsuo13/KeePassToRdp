@@ -11,7 +11,7 @@ Download
 
 Stable release - latest version:
 
-* [1.0.4760.42330](http://andreinicholson.com/project/keepasstordp/KeePassToRdc-1.0.4760.42330.zip)
+* [1.0.4760.42330](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4760.42330.zip)
 
 Usage
 -----
