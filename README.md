@@ -6,6 +6,8 @@ database to launch RDP sessions. This removed the hassle of having to enter
 connection info and login credentials to hosts in an environment where a user
 is connecting to various servers all day long.
 
+![Default window](https://github.com/tetsuo13/KeePassToRdp/raw/master/media/launch.png)
+
 Download
 --------
 
