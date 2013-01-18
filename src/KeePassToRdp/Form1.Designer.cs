@@ -174,7 +174,7 @@ namespace KeePassToRdp
 
         private OpenFileDialog openFileDialog1;
         private Button opendbButton;
-        private Clients clients = new Clients();
+        private Clients clients;
         private Label label1;
         private GroupBox dbOptions;
         private Label label2;

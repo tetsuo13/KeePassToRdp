@@ -77,6 +77,8 @@ namespace KeePassToRdp
 
         private void PopulateCombobox(PwDatabase db)
         {
+            clients = new Clients();
+
             foreach (PwEntry entry in db.RootGroup.GetEntries(true))
             {
                 if (!Client.ValidRdpEntry(entry))
