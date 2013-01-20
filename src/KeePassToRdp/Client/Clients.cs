@@ -60,14 +60,9 @@ namespace KeePassToRdp
 
         public ClientComboBoxItem[] GetComboBoxRange()
         {
-            int lastGroupId = clientList[0].groupId;
+            int lastGroupId = -1;
             ClientComboBoxItem item;
             List<ClientComboBoxItem> items = new List<ClientComboBoxItem>();
-
-            //if (clientList[0].GetTitle().Contains(clientPrefix))
-            //{
-            //    lastGroupId = -1;
-            //}
 
             for (int i = 0; i < clientList.Count; i++)
             {
