@@ -13,6 +13,10 @@ Download
 
 Stable release - latest version:
 
+* [1.0.4767.41767](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4767.41767.zip)
+
+Previous releases:
+
 * [1.0.4760.42330](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4760.42330.zip)
 
 Usage
@@ -25,6 +29,12 @@ the list.
 
 Changelog
 ---------
+
+### 1.0.4767.41767
+
+- Fixed issue with first entry not under a group.
+- Fixed issue after opening additional databases where entries were appended
+  to the list instead of reset.
 
 ### 1.0.4760.42330
 
