@@ -28,7 +28,7 @@ the list. If the entries fall within a group, the group will also appear in
 the list.
 
 The RDP session is launched by Remote Desktop Connection (`mstsc.exe`).
-KeePassToRdp configure the session to launch full screen on the second
+KeePassToRdp will configure the session to launch full screen on the second
 monitor, if found; otherwise it defaults to the primary monitor.
 
 Changelog
