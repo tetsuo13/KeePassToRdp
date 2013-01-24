@@ -17,6 +17,7 @@
 using KeePassLib;
 using KeePassLib.Collections;
 using System;
+using System.Collections.Generic;
 
 namespace KeePassToRdp
 {
@@ -75,11 +76,48 @@ namespace KeePassToRdp
         /// <returns>True if entry appears to represent RDP info</returns>
         public static bool ValidRdpEntry(PwEntry entry)
         {
-            string[] keys = new string[] {"Title", "Notes", "Tags"};
+            if (EntryStringContainsToken(entry))
+            {
+                return true;
+            }
+
+            if (EntryTagsContainToken(entry))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Search the Strings property of an entry for the token.
+        /// </summary>
+        /// <param name="entry">Database entry</param>
+        /// <returns>True if an entry string contains the token</returns>
+        private static bool EntryStringContainsToken(PwEntry entry)
+        {
+            string[] keys = new string[] { "Title", "Notes" };
 
             foreach (string key in keys)
             {
                 if (entry.Strings.ReadSafe(key).ToLower().Contains(EntryToken))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Search all tags for entry for the token.
+        /// </summary>
+        /// <param name="entry">Database entry</param>
+        /// <returns>True if any one tag contains the token</returns>
+        private static bool EntryTagsContainToken(PwEntry entry)
+        {
+            foreach (string tag in entry.Tags)
+            {
+                if (tag.ToLower().Contains(EntryToken))
                 {
                     return true;
                 }
