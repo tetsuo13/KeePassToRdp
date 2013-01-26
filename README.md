@@ -13,10 +13,11 @@ Download
 
 Stable release - latest version:
 
-* [1.0.4767.41767](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4767.41767.zip)
+* [1.0.4771.39313](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4771.39313.zip)
 
 Previous releases:
 
+* [1.0.4767.41767](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4767.41767.zip)
 * [1.0.4760.42330](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4760.42330.zip)
 
 Usage
@@ -33,6 +34,10 @@ monitor, if found; otherwise it defaults to the primary monitor.
 
 Changelog
 ---------
+
+### 1.0.4771.39313
+
+- Fixed catching entries with the key token in its tags.
 
 ### 1.0.4767.41767
 
