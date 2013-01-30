@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using KeePassLib;
 using KeePassLib.Collections;
 using System;
 using System.Collections.Generic;
@@ -26,11 +25,6 @@ namespace KeePassToRdp
     /// </summary>
     public class Client
     {
-        /// <summary>
-        /// Token string to indicate an RDP entry.
-        /// </summary>
-        private const string EntryToken = "rdp";
-
         /// <summary>
         /// Number representing the group this entry is assigned to.
         /// </summary>
@@ -67,62 +61,6 @@ namespace KeePassToRdp
         public string GetUrl()
         {
             return ReadTag("URL");
-        }
-
-        /// <summary>
-        /// Search the title, notes, and tags attributes for the key token.
-        /// </summary>
-        /// <param name="entry">Database entry</param>
-        /// <returns>True if entry appears to represent RDP info</returns>
-        public static bool ValidRdpEntry(PwEntry entry)
-        {
-            if (EntryStringContainsToken(entry))
-            {
-                return true;
-            }
-
-            if (EntryTagsContainToken(entry))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Search the Strings property of an entry for the token.
-        /// </summary>
-        /// <param name="entry">Database entry</param>
-        /// <returns>True if an entry string contains the token</returns>
-        private static bool EntryStringContainsToken(PwEntry entry)
-        {
-            string[] keys = new string[] { "Title", "Notes" };
-
-            foreach (string key in keys)
-            {
-                if (entry.Strings.ReadSafe(key).ToLower().Contains(EntryToken))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Search all tags for entry for the token.
-        /// </summary>
-        /// <param name="entry">Database entry</param>
-        /// <returns>True if any one tag contains the token</returns>
-        private static bool EntryTagsContainToken(PwEntry entry)
-        {
-            foreach (string tag in entry.Tags)
-            {
-                if (tag.ToLower().Contains(EntryToken))
-                {
-                    return true;
-                }
-            }
-            return false;
         }
     }
 }

@@ -14,9 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using KeePassLib;
 using KeePassLib.Collections;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace KeePassToRdp
 {
@@ -34,6 +36,7 @@ namespace KeePassToRdp
 
         private List<Client> clientList = new List<Client>();
         private List<string> groups = new List<string>();
+        private Regex tokenMatch = new Regex(@"\brdp\b", RegexOptions.IgnoreCase);
 
         public void Add(string group, ProtectedStringDictionary dict)
         {
@@ -84,6 +87,62 @@ namespace KeePassToRdp
             }
 
             return items.ToArray();
+        }
+
+        /// <summary>
+        /// Search the title, notes, and tags attributes for the key token.
+        /// </summary>
+        /// <param name="entry">Database entry</param>
+        /// <returns>True if entry appears to represent RDP info</returns>
+        public bool ValidRdpEntry(PwEntry entry)
+        {
+            if (EntryStringContainsToken(entry))
+            {
+                return true;
+            }
+
+            if (EntryTagsContainToken(entry))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Search the Strings property of an entry for the token.
+        /// </summary>
+        /// <param name="entry">Database entry</param>
+        /// <returns>True if an entry string contains the token</returns>
+        private bool EntryStringContainsToken(PwEntry entry)
+        {
+            string[] keys = new string[] { "Title", "Notes" };
+
+            foreach (string key in keys)
+            {
+                if (tokenMatch.IsMatch(entry.Strings.ReadSafe(key)))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Search all tags for entry for the token.
+        /// </summary>
+        /// <param name="entry">Database entry</param>
+        /// <returns>True if any one tag contains the token</returns>
+        private bool EntryTagsContainToken(PwEntry entry)
+        {
+            foreach (string tag in entry.Tags)
+            {
+                if (tokenMatch.IsMatch(tag))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

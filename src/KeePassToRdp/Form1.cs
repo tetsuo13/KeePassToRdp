@@ -81,7 +81,7 @@ namespace KeePassToRdp
 
             foreach (PwEntry entry in db.RootGroup.GetEntries(true))
             {
-                if (!Client.ValidRdpEntry(entry))
+                if (!clients.ValidRdpEntry(entry))
                 {
                     continue;
                 }
