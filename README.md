@@ -13,10 +13,11 @@ Download
 
 Stable release - latest version:
 
-* [1.0.4771.39313](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4771.39313.zip)
+* [1.0.5.0](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.5.0.zip)
 
 Previous releases:
 
+* [1.0.4771.39313](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4771.39313.zip)
 * [1.0.4767.41767](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4767.41767.zip)
 * [1.0.4760.42330](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4760.42330.zip)
 
@@ -34,6 +35,11 @@ monitor, if found; otherwise it defaults to the primary monitor.
 
 Changelog
 ---------
+
+### 1.0.5.0
+
+- Fixed catching false positives in words like "WordPress".
+- Changed RDP session name to include KeePass entry title.
 
 ### 1.0.4771.39313
 
