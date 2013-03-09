@@ -14,11 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using KeePassLib;
-using KeePassLib.Collections;
-using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using KeePassLib;
+using KeePassLib.Collections;
 
 namespace KeePassToRdp
 {
