@@ -1,5 +1,11 @@
-﻿# KeePass to RDP. Package compiled application into a ZIP file with
-# the product version in the filename.
+﻿<#
+.SYNOPSIS
+Prepare executable for consumption.
+
+.DESCRIPTION
+Create ZIP package containing the executable in a subdirectory. Filename of
+package should contain the assembly version number.
+#>
 # Copyright (C) 2013  Andrei Nicholson
 #
 # This program is free software: you can redistribute it and/or modify
