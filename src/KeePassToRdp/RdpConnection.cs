@@ -89,7 +89,7 @@ namespace KeePassToRdp
         private static void LaunchRdc(string rdpFile)
         {
             Process rdc = new Process();
-            string exe = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\system32\mstsc.exe");
+            string exe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "mstsc.exe");
 
             if (exe != null)
             {
@@ -176,7 +176,7 @@ namespace KeePassToRdp
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
-                throw new Exception();
+                throw e;
             }
 
             return rdpFile;
