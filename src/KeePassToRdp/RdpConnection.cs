@@ -21,6 +21,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 
@@ -167,7 +168,7 @@ namespace KeePassToRdp
             contents.Add("username:s:" + c.GetUserName());
             contents.Add("password 51:b:" + EncryptPassword(c.GetPassword()));
 
-            string rdpFile = Path.Combine(Path.GetTempPath(), c.GetTitle() + ".tmp");
+            string rdpFile = Path.Combine(Path.GetTempPath(), UniqueConnectionName(c.GetTitle(), c.GetUrl()));
 
             try
             {
@@ -180,6 +181,66 @@ namespace KeePassToRdp
             }
 
             return rdpFile;
+        }
+
+        /// <summary>
+        /// Use the client name in conjunction with an incrementing counter.
+        /// This is used as the RDC connection name so that each instance of
+        /// the same client is given a unique name in the taskbar.
+        /// </summary>
+        /// <remarks>
+        /// Attempts to query all running applications to find a window title
+        /// like "clientName - IP - Remote Desktop Connection". A number is
+        /// appended to the client name.
+        /// </remarks>
+        /// <param name="clientName">Client name</param>
+        /// <param name="clientAddress">IP address of client</param>
+        /// <returns>Filename used for RDC connection</returns>
+        private static string UniqueConnectionName(string clientName, string clientAddress)
+        {
+            Regex existingClient = new Regex(String.Format(@"^{0}-?(\d+)?\s?- {1} - Remote Desktop Connection$",
+                clientName, clientAddress));
+            Process[] processList = Process.GetProcesses();
+            string connectionName = clientName;
+            int nextInstanceId = 0;
+
+            foreach (Process process in processList)
+            {
+                Match matches = existingClient.Match(process.MainWindowTitle);
+
+                if (String.IsNullOrEmpty(process.MainWindowTitle) || !matches.Success)
+                {
+                    continue;
+                }
+
+                if (!String.IsNullOrEmpty(matches.Groups[1].Value))
+                {
+                    try
+                    {
+                        nextInstanceId = Int32.Parse(matches.Groups[1].Value) + 1;
+                    }
+                    catch (Exception e)
+                    {
+                    }
+                }
+                else
+                {
+                    nextInstanceId = 2;
+                }
+            }
+
+            string filename;
+
+            if (nextInstanceId == 0)
+            {
+                filename = connectionName;
+            }
+            else
+            {
+                filename = String.Format("{0}-{1}", connectionName, nextInstanceId.ToString());
+            }
+
+            return String.Format("{0}.tmp", filename);
         }
 
         /// <summary>
