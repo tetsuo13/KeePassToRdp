@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using KeePassLib.Collections;
+using System.IO;
 
 namespace KeePassToRdp
 {
@@ -30,15 +31,45 @@ namespace KeePassToRdp
 
         private ProtectedStringDictionary dict;
 
+        /// <summary>
+        /// Title tag safe for a filename.
+        /// </summary>
+        private string safeTitle;
+
         public Client(int groupId, ProtectedStringDictionary dict)
         {
             this.groupId = groupId;
             this.dict = dict;
+            safeTitle = ReplaceInvalidChars(GetTitle());
+        }
+
+        /// <summary>
+        /// Replace characters which are invalid for filenames or paths.
+        /// </summary>
+        /// <param name="title"></param>
+        private string ReplaceInvalidChars(string tag)
+        {
+            const string replacementChar = "-";
+            string invalidCharacters = new string(Path.GetInvalidFileNameChars()) +
+                new string(Path.GetInvalidPathChars());
+            string safeTag = tag;
+
+            foreach (char c in invalidCharacters)
+            {
+                safeTag = safeTag.Replace(c.ToString(), replacementChar);
+            }
+
+            return safeTag;
         }
 
         private string ReadTag(string tag)
         {
             return dict.ReadSafe(tag);
+        }
+
+        public string GetSafeTitle()
+        {
+            return safeTitle;
         }
 
         public string GetTitle()

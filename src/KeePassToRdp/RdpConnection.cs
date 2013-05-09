@@ -168,7 +168,7 @@ namespace KeePassToRdp
             contents.Add("username:s:" + c.GetUserName());
             contents.Add("password 51:b:" + EncryptPassword(c.GetPassword()));
 
-            string rdpFile = Path.Combine(Path.GetTempPath(), UniqueConnectionName(c.GetTitle(), c.GetUrl()));
+            string rdpFile = Path.Combine(Path.GetTempPath(), UniqueConnectionName(c.GetSafeTitle(), c.GetUrl()));
 
             try
             {
