@@ -57,7 +57,6 @@ namespace KeePassToRdp
             this.passwordBox.Size = new System.Drawing.Size(268, 20);
             this.passwordBox.TabIndex = 0;
             this.passwordBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.passwordBox_KeyPress);
-            this.passwordBox.TextChanged += new System.EventHandler(this.passwordBox_TextChanged);
             // 
             // label1
             // 

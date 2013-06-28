@@ -35,6 +35,7 @@ namespace KeePassToRdp
 
         private void okButton_Click(object sender, EventArgs e)
         {
+            password.SetPassword(passwordBox.Text);
             this.DialogResult = DialogResult.OK;
         }
 
@@ -50,11 +51,6 @@ namespace KeePassToRdp
                 okButton.PerformClick();
                 e.Handled = true;
             }
-        }
-
-        void passwordBox_TextChanged(object sender, System.EventArgs e)
-        {
-            password.SetPassword(passwordBox.Text);
         }
     }
 }
