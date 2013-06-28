@@ -13,13 +13,12 @@ Download
 
 Stable release - latest version:
 
-* [1.0.5.0](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.5.0.zip)
+* [1.1.0.0](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.1.0.0.zip)
 
 Previous releases:
 
+* [1.0.5.0](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.5.0.zip)
 * [1.0.4771.39313](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4771.39313.zip)
-* [1.0.4767.41767](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4767.41767.zip)
-* [1.0.4760.42330](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4760.42330.zip)
 
 Usage
 -----
@@ -35,6 +34,17 @@ monitor, if found; otherwise it defaults to the primary monitor.
 
 Changelog
 ---------
+
+### 1.1.0.0
+
+- Fixed bug which prevented opening databases when not pasting the password.
+- Fixed bug where invalid characters used in the KeePass entry title would
+  cause failure to launch RDP session.
+- Added feature to append an incrementing number to the RDP connection name
+  for the taskbar when launching the same remote host more than once. This
+  helps distinguish between multiple connections to the same remote host.
+- Fixed potential security issue by not using the environment variable
+  `%SystemRoot%` to get to the `system32` directory.
 
 ### 1.0.5.0
 
