@@ -8,18 +8,6 @@ environment where you connect to various servers all day long.
 
 ![Default window](https://github.com/tetsuo13/KeePassToRdp/raw/master/media/launch.png)
 
-Download
---------
-
-Stable release - latest version:
-
-* [1.1.0.0](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.1.0.0.zip)
-
-Previous releases:
-
-* [1.0.5.0](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.5.0.zip)
-* [1.0.4771.39313](http://andreinicholson.com/project/keepasstordp/KeePassToRdp-1.0.4771.39313.zip)
-
 Usage
 -----
 
@@ -31,36 +19,3 @@ the list.
 The RDP session is launched by Remote Desktop Connection (`mstsc.exe`).
 KeePassToRdp will configure the session to launch full screen on the second
 monitor, if found; otherwise it defaults to the primary monitor.
-
-Changelog
----------
-
-### 1.1.0.0
-
-- Fixed bug which prevented opening databases when not pasting the password.
-- Fixed bug where invalid characters used in the KeePass entry title would
-  cause failure to launch RDP session.
-- Added feature to append an incrementing number to the RDP connection name
-  for the taskbar when launching the same remote host more than once. This
-  helps distinguish between multiple connections to the same remote host.
-- Fixed potential security issue by not using the environment variable
-  `%SystemRoot%` to get to the `system32` directory.
-
-### 1.0.5.0
-
-- Fixed catching false positives in words like "WordPress".
-- Changed RDP session name to include KeePass entry title.
-
-### 1.0.4771.39313
-
-- Fixed catching entries with the key token in its tags.
-
-### 1.0.4767.41767
-
-- Fixed issue with first entry not under a group.
-- Fixed issue after opening additional databases where entries were appended
-  to the list instead of reset.
-
-### 1.0.4760.42330
-
-- Initial release.
