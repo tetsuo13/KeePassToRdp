@@ -92,29 +92,26 @@ namespace KeePassToRdp
             Process rdc = new Process();
             string exe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "mstsc.exe");
 
-            if (exe != null)
+            rdc.StartInfo.FileName = exe;
+            rdc.StartInfo.Arguments = rdpFile;
+
+            try
             {
-                rdc.StartInfo.FileName = exe;
-                rdc.StartInfo.Arguments = rdpFile;
+                rdc.Start();
+                Thread.Sleep(5000);
 
                 try
                 {
-                    rdc.Start();
-                    Thread.Sleep(5000);
-
-                    try
-                    {
-                        File.Delete(rdpFile);
-                    }
-                    catch (Exception)
-                    {
-                        // Let OS prune it eventually.
-                    }
+                    File.Delete(rdpFile);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    MessageBox.Show("Problem starting mstsc: " + e.Message);
+                    // Let OS prune it eventually.
                 }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Problem starting mstsc: " + e.Message);
             }
         }
 
@@ -168,7 +165,7 @@ namespace KeePassToRdp
             contents.Add("username:s:" + c.GetUserName());
             contents.Add("password 51:b:" + EncryptPassword(c.GetPassword()));
 
-            string rdpFile = Path.Combine(Path.GetTempPath(), UniqueConnectionName(c.GetSafeTitle(), c.GetUrl()));
+            string rdpFile = Path.Combine(Path.GetTempPath(), UniqueConnectionFileName(c.GetSafeTitle(), c.GetUrl()));
 
             try
             {
@@ -196,12 +193,15 @@ namespace KeePassToRdp
         /// <param name="clientName">Client name</param>
         /// <param name="clientAddress">IP address of client</param>
         /// <returns>Filename used for RDC connection</returns>
-        private static string UniqueConnectionName(string clientName, string clientAddress)
+        private static string UniqueConnectionFileName(string clientName, string clientAddress)
         {
+            // Replace characters which will cause issues for the file name.
+            string filenameSafeClientName = clientName.Replace('.', '-');
+
             Regex existingClient = new Regex(String.Format(@"^{0}-?(\d+)?\s?- {1} - Remote Desktop Connection$",
-                clientName, clientAddress));
+                Regex.Escape(filenameSafeClientName), Regex.Escape(clientAddress)));
             Process[] processList = Process.GetProcesses();
-            string connectionName = clientName;
+            string connectionName = filenameSafeClientName;
             int nextInstanceId = 0;
 
             foreach (Process process in processList)
