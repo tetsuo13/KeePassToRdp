@@ -14,8 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using KeePassLib.Collections;
 using System.IO;
+using KeePassLib.Collections;
 
 namespace KeePassToRdp
 {
@@ -24,11 +24,6 @@ namespace KeePassToRdp
     /// </summary>
     public class Client
     {
-        /// <summary>
-        /// Number representing the group this entry is assigned to.
-        /// </summary>
-        public int groupId { get; private set; }
-
         private ProtectedStringDictionary dict;
 
         /// <summary>
@@ -36,9 +31,8 @@ namespace KeePassToRdp
         /// </summary>
         private string safeTitle;
 
-        public Client(int groupId, ProtectedStringDictionary dict)
+        public Client(ProtectedStringDictionary dict)
         {
-            this.groupId = groupId;
             this.dict = dict;
             safeTitle = ReplaceInvalidChars(GetTitle());
         }

@@ -15,12 +15,29 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using KeePassLib;
 using KeePassLib.Collections;
 
 namespace KeePassToRdp
 {
+    /// <summary>
+    /// Organizes all clients within their respective groups.
+    /// </summary>
+    /// <remarks>
+    /// A dictionary is used to maintain the group and all of its clients. The
+    /// groups are sorted and all clients within are also sorted.
+    ///
+    /// Throughout the scope of the object, it's assumed that the population
+    /// of the list (<seealso cref="Clients.Add"/>) will occur and then only
+    /// reads (<seealso cref="GetClient"/>) will occur thereafter. This is
+    /// important since GetComboBoxRange will increment a counter for the
+    /// clients and use that as their ID. When retrieving a client,
+    /// <seealso cref="GetClient"/>, the requested ID must correspond to that
+    /// client's position. Adding any subsequent clients will throw off the
+    /// IDs since the list is sorted.
+    /// </remarks>
     public class Clients
     {
         /// <summary>
@@ -33,56 +50,64 @@ namespace KeePassToRdp
         /// </summary>
         public const string ClientPrefix = "    ";
 
-        private List<Client> clientList = new List<Client>();
-        private List<string> groups = new List<string>();
-        private Regex tokenMatch = new Regex(@"\brdp\b", RegexOptions.IgnoreCase);
+        private readonly Regex TokenMatch = new Regex(@"\brdp\b", RegexOptions.IgnoreCase);
+
+        private SortedList<string, List<Client>> clientList = new SortedList<string, List<Client>>();
 
         public void Add(string group, ProtectedStringDictionary dict)
         {
-            clientList.Add(new Client(FindOrCreateGroup(group), dict));
+            Client client = new Client(dict);
+
+            if (!clientList.ContainsKey(group))
+            {
+                clientList.Add(group, new List<Client> { client });
+            }
+            else
+            {
+                clientList[group].Add(client);
+                clientList[group] = clientList[group].OrderBy(x => x.GetTitle()).ToList();
+            }
         }
 
         public Client GetClient(int clientId)
         {
-            return clientList[clientId];
-        }
+            // Flatten all of the lists. Each group would've been its own list
+            // of Clients.
+            List<Client> clients = clientList.Values.SelectMany(x => x).ToList();
 
-        private int FindOrCreateGroup(string needle)
-        {
-            for (int i = 0; i < groups.Count; i++)
+            if (clients.Count < clientId)
             {
-                if (groups[i].Equals(needle))
-                {
-                    return i;
-                }
+                return clients[clientId];
             }
-            groups.Add(needle);
-            return groups.Count - 1;
+
+            throw new KeyNotFoundException();
         }
 
         public ClientComboBoxItem[] GetComboBoxRange()
         {
-            int lastGroupId = -1;
-            ClientComboBoxItem item;
             List<ClientComboBoxItem> items = new List<ClientComboBoxItem>();
+            int itemNumber = 0;
 
-            for (int i = 0; i < clientList.Count; i++)
+            foreach (KeyValuePair<string, List<Client>> pair in clientList)
             {
-                if (clientList[i].groupId != lastGroupId)
+                items.Add(new ClientComboBoxItem
                 {
-                    item = new ClientComboBoxItem();
-                    item.Text = groups[clientList[i].groupId];
-                    item.Selectable = false;
-                    item.Value = -1;
-                    lastGroupId = clientList[i].groupId;
-                    items.Add(item);
-                }
+                    Text = pair.Key,
+                    Selectable = false,
+                    Value = 0
+                });
 
-                item = new ClientComboBoxItem();
-                item.Text = Clients.ClientPrefix + clientList[i].GetTitle();
-                item.Value = i;
-                item.Selectable = true;
-                items.Add(item);
+                foreach (Client client in pair.Value)
+                {
+                    items.Add(new ClientComboBoxItem
+                    {
+                        Text = Clients.ClientPrefix + client.GetTitle(),
+                        Selectable = true,
+                        Value = itemNumber
+                    });
+
+                    itemNumber++;
+                }
             }
 
             return items.ToArray();
@@ -119,7 +144,7 @@ namespace KeePassToRdp
 
             foreach (string key in keys)
             {
-                if (tokenMatch.IsMatch(entry.Strings.ReadSafe(key)))
+                if (TokenMatch.IsMatch(entry.Strings.ReadSafe(key)))
                 {
                     return true;
                 }
@@ -136,7 +161,7 @@ namespace KeePassToRdp
         {
             foreach (string tag in entry.Tags)
             {
-                if (tokenMatch.IsMatch(tag))
+                if (TokenMatch.IsMatch(tag))
                 {
                     return true;
                 }
