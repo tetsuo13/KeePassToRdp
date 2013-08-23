@@ -93,7 +93,9 @@ namespace KeePassToRdp
             string exe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "mstsc.exe");
 
             rdc.StartInfo.FileName = exe;
-            rdc.StartInfo.Arguments = rdpFile;
+
+            // Quote entire path since the connection name may have spaces.
+            rdc.StartInfo.Arguments = String.Format(@"""{0}""", rdpFile);
 
             try
             {
