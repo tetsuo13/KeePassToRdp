@@ -75,7 +75,7 @@ namespace KeePassToRdp
             // of Clients.
             List<Client> clients = clientList.Values.SelectMany(x => x).ToList();
 
-            if (clients.Count < clientId)
+            if (clientId < clients.Count)
             {
                 return clients[clientId];
             }
