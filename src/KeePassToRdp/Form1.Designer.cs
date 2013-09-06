@@ -48,13 +48,15 @@ namespace KeePassToRdp
         {
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.opendbButton = new System.Windows.Forms.Button();
-            this.comboBox1 = new KeePassToRdp.ClientComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.dbOptions = new System.Windows.Forms.GroupBox();
             this.refreshButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.serverList = new System.Windows.Forms.GroupBox();
+            this.checkBoxPublic = new System.Windows.Forms.CheckBox();
+            this.checkBoxAdmin = new System.Windows.Forms.CheckBox();
             this.launchButton = new System.Windows.Forms.Button();
+            this.comboBox1 = new KeePassToRdp.ClientComboBox();
             this.dbOptions.SuspendLayout();
             this.serverList.SuspendLayout();
             this.SuspendLayout();
@@ -66,26 +68,13 @@ namespace KeePassToRdp
             // 
             // opendbButton
             // 
-            this.opendbButton.Location = new System.Drawing.Point(85, 55);
+            this.opendbButton.Location = new System.Drawing.Point(85, 50);
             this.opendbButton.Name = "opendbButton";
             this.opendbButton.Size = new System.Drawing.Size(97, 23);
             this.opendbButton.TabIndex = 0;
             this.opendbButton.Text = "Open Database";
             this.opendbButton.UseVisualStyleBackColor = true;
             this.opendbButton.Click += new System.EventHandler(this.opendbButton_Click);
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DisplayMember = "Text";
-            this.comboBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(16, 26);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
-            this.comboBox1.TabIndex = 1;
-            this.comboBox1.ValueMember = "Value";
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -105,7 +94,7 @@ namespace KeePassToRdp
             this.dbOptions.Controls.Add(this.label1);
             this.dbOptions.Location = new System.Drawing.Point(12, 12);
             this.dbOptions.Name = "dbOptions";
-            this.dbOptions.Size = new System.Drawing.Size(371, 93);
+            this.dbOptions.Size = new System.Drawing.Size(371, 88);
             this.dbOptions.TabIndex = 3;
             this.dbOptions.TabStop = false;
             this.dbOptions.Text = "Database Options";
@@ -113,7 +102,7 @@ namespace KeePassToRdp
             // refreshButton
             // 
             this.refreshButton.Enabled = false;
-            this.refreshButton.Location = new System.Drawing.Point(188, 55);
+            this.refreshButton.Location = new System.Drawing.Point(188, 50);
             this.refreshButton.Name = "refreshButton";
             this.refreshButton.Size = new System.Drawing.Size(97, 23);
             this.refreshButton.TabIndex = 4;
@@ -132,25 +121,62 @@ namespace KeePassToRdp
             // 
             // serverList
             // 
+            this.serverList.Controls.Add(this.checkBoxPublic);
+            this.serverList.Controls.Add(this.checkBoxAdmin);
             this.serverList.Controls.Add(this.launchButton);
             this.serverList.Controls.Add(this.comboBox1);
             this.serverList.Enabled = false;
-            this.serverList.Location = new System.Drawing.Point(12, 122);
+            this.serverList.Location = new System.Drawing.Point(12, 106);
             this.serverList.Name = "serverList";
-            this.serverList.Size = new System.Drawing.Size(371, 106);
+            this.serverList.Size = new System.Drawing.Size(371, 122);
             this.serverList.TabIndex = 4;
             this.serverList.TabStop = false;
             this.serverList.Text = "Server List";
             // 
+            // checkBoxPublic
+            // 
+            this.checkBoxPublic.AutoSize = true;
+            this.checkBoxPublic.Location = new System.Drawing.Point(16, 83);
+            this.checkBoxPublic.Name = "checkBoxPublic";
+            this.checkBoxPublic.Size = new System.Drawing.Size(295, 17);
+            this.checkBoxPublic.TabIndex = 4;
+            this.checkBoxPublic.Text = "Runs in public mode, passwords and bitmaps not cached";
+            this.checkBoxPublic.UseVisualStyleBackColor = true;
+            this.checkBoxPublic.CheckedChanged += new System.EventHandler(this.checkBoxPublic_CheckedChanged);
+            // 
+            // checkBoxAdmin
+            // 
+            this.checkBoxAdmin.AutoSize = true;
+            this.checkBoxAdmin.Location = new System.Drawing.Point(16, 63);
+            this.checkBoxAdmin.Name = "checkBoxAdmin";
+            this.checkBoxAdmin.Size = new System.Drawing.Size(259, 17);
+            this.checkBoxAdmin.TabIndex = 3;
+            this.checkBoxAdmin.Text = "Connects to a session for administering the server";
+            this.checkBoxAdmin.UseVisualStyleBackColor = true;
+            this.checkBoxAdmin.CheckedChanged += new System.EventHandler(this.checkBoxAdmin_CheckedChanged);
+            // 
             // launchButton
             // 
-            this.launchButton.Location = new System.Drawing.Point(119, 66);
+            this.launchButton.Location = new System.Drawing.Point(227, 26);
             this.launchButton.Name = "launchButton";
             this.launchButton.Size = new System.Drawing.Size(129, 23);
             this.launchButton.TabIndex = 2;
             this.launchButton.Text = "Launch Connection";
             this.launchButton.UseVisualStyleBackColor = true;
             this.launchButton.Click += new System.EventHandler(this.launchButton_Click);
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DisplayMember = "Text";
+            this.comboBox1.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Location = new System.Drawing.Point(16, 26);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.TabIndex = 1;
+            this.comboBox1.ValueMember = "Value";
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // Form1
             // 
@@ -166,6 +192,7 @@ namespace KeePassToRdp
             this.dbOptions.ResumeLayout(false);
             this.dbOptions.PerformLayout();
             this.serverList.ResumeLayout(false);
+            this.serverList.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -182,5 +209,7 @@ namespace KeePassToRdp
         private Button launchButton;
         private ClientComboBox comboBox1;
         private Button refreshButton;
+        private CheckBox checkBoxAdmin;
+        private CheckBox checkBoxPublic;
     }
 }

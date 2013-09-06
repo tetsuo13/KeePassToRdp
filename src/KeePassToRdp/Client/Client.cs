@@ -31,6 +31,8 @@ namespace KeePassToRdp
         /// </summary>
         private string safeTitle;
 
+        public ClientSettings settings = new ClientSettings();
+
         public Client(ProtectedStringDictionary dict)
         {
             this.dict = dict;
@@ -40,7 +42,7 @@ namespace KeePassToRdp
         /// <summary>
         /// Replace characters which are invalid for filenames or paths.
         /// </summary>
-        /// <param name="title"></param>
+        /// <param name="tag"></param>
         private string ReplaceInvalidChars(string tag)
         {
             const string replacementChar = "-";

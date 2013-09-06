@@ -163,7 +163,7 @@ namespace KeePassToRdp
             contents.Add("winposstr:s:" + WindowPosition());
             contents.Add("desktopwidth:i:" + SystemInformation.VirtualScreen.Width.ToString());
             contents.Add("desktopheight:i:" + SystemInformation.VirtualScreen.Height.ToString());
-            contents.Add("full address:s:" + c.GetUrl());
+            contents.Add("full address:s:" + FullAddress(c, c.GetUrl()));
             contents.Add("username:s:" + c.GetUserName());
             contents.Add("password 51:b:" + EncryptPassword(c.GetPassword()));
 
@@ -180,6 +180,29 @@ namespace KeePassToRdp
             }
 
             return rdpFile;
+        }
+
+        /// <summary>
+        /// Return the full address including any selected options.
+        /// </summary>
+        /// <param name="client">Client with settings to check</param>
+        /// <param name="url">URL to start with</param>
+        /// <returns></returns>
+        private static string FullAddress(Client client, string url)
+        {
+            List<string> fullAddress = new List<string>() { url };
+
+            if (client.settings.Admin)
+            {
+                fullAddress.Add("/admin");
+            }
+
+            if (client.settings.Public)
+            {
+                fullAddress.Add("/public");
+            }
+
+            return String.Join(" ", fullAddress);
         }
 
         /// <summary>

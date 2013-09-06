@@ -69,7 +69,24 @@ namespace KeePassToRdp
             }
         }
 
+        public void ChangeSettingAdmin(int clientId, bool enabled)
+        {
+            Client client = ClientSearch(clientId);
+            client.settings.Admin = enabled;
+        }
+
+        public void ChangeSettingPublic(int clientId, bool enabled)
+        {
+            Client client = ClientSearch(clientId);
+            client.settings.Public = enabled;
+        }
+
         public Client GetClient(int clientId)
+        {
+            return ClientSearch(clientId);
+        }
+
+        private Client ClientSearch(int clientId)
         {
             // Flatten all of the lists. Each group would've been its own list
             // of Clients.

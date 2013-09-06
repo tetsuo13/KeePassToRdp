@@ -51,7 +51,7 @@ namespace KeePassToRdp
             {
                 ReadDatabase(file, loadDb);
                 serverList.Enabled = true;
-                launchButton.Enabled = false;
+                ToggleOptions(false);
             }
             catch (KeePassLib.Keys.InvalidCompositeKeyException e)
             {
@@ -143,9 +143,44 @@ namespace KeePassToRdp
             if (comboBox1.SelectedItem != null && ((ClientComboBoxItem)comboBox1.SelectedItem).Selectable)
             {
                 enabled = true;
+                int selectedClientIndex = ((ClientComboBoxItem)comboBox1.SelectedItem).Value;
+                Client client = clients.GetClient(selectedClientIndex);
+                ToggleOptions(enabled, client);
             }
+            else
+            {
+                ToggleOptions(enabled);
+            }
+        }
 
-            this.launchButton.Enabled = enabled;
+        private void ToggleOptions(bool enabled)
+        {
+            launchButton.Enabled = enabled;
+            checkBoxAdmin.Enabled = enabled;
+            checkBoxAdmin.Checked = false;
+            checkBoxPublic.Enabled = enabled;
+            checkBoxPublic.Checked = false;
+        }
+
+        private void ToggleOptions(bool enableLaunchButton, Client client)
+        {
+            ToggleOptions(enableLaunchButton);
+
+            if (enableLaunchButton)
+            {
+                checkBoxAdmin.Checked = client.settings.Admin;
+                checkBoxPublic.Checked = client.settings.Public;
+            }
+        }
+
+        private void checkBoxAdmin_CheckedChanged(object sender, EventArgs e)
+        {
+            clients.ChangeSettingAdmin(((ClientComboBoxItem)comboBox1.SelectedItem).Value, checkBoxAdmin.Checked);
+        }
+
+        private void checkBoxPublic_CheckedChanged(object sender, EventArgs e)
+        {
+            clients.ChangeSettingPublic(((ClientComboBoxItem)comboBox1.SelectedItem).Value, checkBoxPublic.Checked);
         }
     }
 }
