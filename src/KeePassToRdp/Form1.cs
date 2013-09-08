@@ -156,10 +156,20 @@ namespace KeePassToRdp
         private void ToggleOptions(bool enabled)
         {
             launchButton.Enabled = enabled;
+
+            // Disable firing the checked event while changing the boxes. Only
+            // want to uncheck the boxes for visual response, not change the
+            // setting for the client.
+            checkBoxAdmin.CheckedChanged -= checkBoxAdmin_CheckedChanged;
+            checkBoxPublic.CheckedChanged -= checkBoxPublic_CheckedChanged;
+
             checkBoxAdmin.Enabled = enabled;
             checkBoxAdmin.Checked = false;
             checkBoxPublic.Enabled = enabled;
             checkBoxPublic.Checked = false;
+
+            checkBoxAdmin.CheckedChanged += checkBoxAdmin_CheckedChanged;
+            checkBoxPublic.CheckedChanged += checkBoxPublic_CheckedChanged;
         }
 
         private void ToggleOptions(bool enableLaunchButton, Client client)
