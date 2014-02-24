@@ -1,5 +1,6 @@
-﻿// KeePass to RDP.
-// Copyright (C) 2013  Andrei Nicholson
+﻿#region License
+// KeePass to RDP.
+// Copyright (C) 2013-2014 Andrei Nicholson
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,6 +14,7 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#endregion
 
 using System;
 using System.Collections.Generic;
@@ -20,6 +22,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace KeePassToRdp
@@ -40,14 +43,13 @@ namespace KeePassToRdp
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                System.Windows.MessageBox.Show(e.Message);
             }
         }
 
         /// <summary>
         /// Launch MSTSC using an RDP file. Delete the file afterwards.
         /// </summary>
-        /// 
         /// <remarks>
         /// RDP file is deleted a few seconds after MSTSC is lauched. This can
         /// be error prone and exposes the risk of the file being moved
@@ -57,17 +59,16 @@ namespace KeePassToRdp
         /// <param name="rdpFile">Path to RDP file</param>
         private static void LaunchRdc(string rdpFile)
         {
-            Process rdc = new Process();
-            string exe = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "mstsc.exe");
-
-            rdc.StartInfo.FileName = exe;
-
-            // Quote entire path since the connection name may have spaces.
-            rdc.StartInfo.Arguments = String.Format(@"""{0}""", rdpFile);
-
-            try
+            ProcessStartInfo processInfo = new ProcessStartInfo("mstsc.exe")
             {
-                rdc.Start();
+                WorkingDirectory = Environment.GetFolderPath(Environment.SpecialFolder.System),
+
+                // Quote entire path since the connection name may have spaces.
+                Arguments = String.Format(@"""{0}""", rdpFile)
+            };
+
+            using (Process process = Process.Start(processInfo))
+            {
                 Thread.Sleep(5000);
 
                 try
@@ -78,10 +79,6 @@ namespace KeePassToRdp
                 {
                     // Let OS prune it eventually.
                 }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show("Problem starting mstsc: " + e.Message);
             }
         }
 
@@ -129,8 +126,8 @@ namespace KeePassToRdp
             };
 
             contents.Add("winposstr:s:" + WindowPosition());
-            contents.Add("desktopwidth:i:" + SystemInformation.VirtualScreen.Width.ToString());
-            contents.Add("desktopheight:i:" + SystemInformation.VirtualScreen.Height.ToString());
+            contents.Add("desktopwidth:i:" + SystemParameters.VirtualScreenWidth.ToString());
+            contents.Add("desktopheight:i:" + SystemParameters.VirtualScreenHeight.ToString());
             contents.Add("full address:s:" + FullAddress(c, c.GetUrl()));
             contents.Add("username:s:" + c.GetUserName());
             contents.Add("password 51:b:" + RdpPassword.EncryptPassword(c.GetPassword()));
@@ -143,7 +140,7 @@ namespace KeePassToRdp
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
+                System.Windows.MessageBox.Show(e.Message);
                 throw e;
             }
 
@@ -212,7 +209,7 @@ namespace KeePassToRdp
                     {
                         nextInstanceId = Int32.Parse(matches.Groups[1].Value) + 1;
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                     }
                 }
@@ -246,15 +243,16 @@ namespace KeePassToRdp
         /// <returns></returns>
         private static string WindowPosition()
         {
-            List<int> winposstr = new List<int>() { 2 };
-            int left;
-            int top;
-            int bottom;
+            List<double> winposstr = new List<double>() { 2 };
+            double left = 0;
+            double top = 0;
+            double bottom = 0;
 
+            // TODO: There's GOT to be a way of determining if there's two monitors in WPF!
             if (Screen.AllScreens.Length > 1)
             {
-                left = Screen.AllScreens[1].Bounds.Left;
-                top = Screen.AllScreens[1].Bounds.Top;
+                left = SystemParameters.VirtualScreenLeft;
+                top = SystemParameters.VirtualScreenTop;
                 bottom = Screen.AllScreens[1].Bounds.Bottom;
             }
             else
@@ -267,7 +265,7 @@ namespace KeePassToRdp
             winposstr.Add(3);
             winposstr.Add(left);
             winposstr.Add(top);
-            winposstr.Add(SystemInformation.VirtualScreen.Width);
+            winposstr.Add(SystemParameters.VirtualScreenWidth);
             winposstr.Add(bottom);
 
             return String.Join(",", winposstr);

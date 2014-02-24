@@ -1,5 +1,6 @@
-﻿// KeePass to RDP.
-// Copyright (C) 2013  Andrei Nicholson
+﻿#region License
+// KeePass to RDP.
+// Copyright (C) 2013-2014 Andrei Nicholson
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,12 +14,13 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#endregion
 
+using KeePassLib;
+using KeePassLib.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using KeePassLib;
-using KeePassLib.Collections;
 
 namespace KeePassToRdp
 {
@@ -45,14 +47,15 @@ namespace KeePassToRdp
         /// </summary>
         public const string GroupSeparator = " / ";
 
-        /// <summary>
-        /// Prefix used for entry title during display.
-        /// </summary>
-        public const string ClientPrefix = "    ";
+        private readonly Regex TokenMatch;
 
-        private readonly Regex TokenMatch = new Regex(@"\brdp\b", RegexOptions.IgnoreCase);
+        private SortedList<string, List<Client>> clientList;
 
-        private SortedList<string, List<Client>> clientList = new SortedList<string, List<Client>>();
+        public Clients()
+        {
+            TokenMatch = new Regex(@"\brdp\b", RegexOptions.IgnoreCase);
+            clientList = new SortedList<string, List<Client>>();
+        }
 
         public void Add(string group, ProtectedStringDictionary dict)
         {
@@ -100,26 +103,27 @@ namespace KeePassToRdp
             throw new KeyNotFoundException();
         }
 
-        public ClientComboBoxItem[] GetComboBoxRange()
+        public List<ComboBoxItem> GetComboBoxRange()
         {
-            List<ClientComboBoxItem> items = new List<ClientComboBoxItem>();
+            List<ComboBoxItem> items = new List<ComboBoxItem>();
             int itemNumber = 0;
 
             foreach (KeyValuePair<string, List<Client>> pair in clientList)
             {
-                items.Add(new ClientComboBoxItem
+                items.Add(new ComboBoxItem
                 {
-                    Text = pair.Key,
-                    Selectable = false,
-                    Value = 0
+                    DisplayText = pair.Key,
+                    IsHeader = true,
+                    Value = 0,
+                    
                 });
 
                 foreach (Client client in pair.Value)
                 {
-                    items.Add(new ClientComboBoxItem
+                    items.Add(new ComboBoxItem
                     {
-                        Text = Clients.ClientPrefix + client.GetTitle(),
-                        Selectable = true,
+                        DisplayText = client.GetTitle(),
+                        IsHeader = false,
                         Value = itemNumber
                     });
 
@@ -127,7 +131,7 @@ namespace KeePassToRdp
                 }
             }
 
-            return items.ToArray();
+            return items;
         }
 
         /// <summary>

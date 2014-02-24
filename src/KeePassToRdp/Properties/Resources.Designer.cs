@@ -59,12 +59,5 @@ namespace KeePassToRdp.Properties {
                 resourceCulture = value;
             }
         }
-        
-        internal static byte[] KeePassLib {
-            get {
-                object obj = ResourceManager.GetObject("KeePassLib", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
     }
 }

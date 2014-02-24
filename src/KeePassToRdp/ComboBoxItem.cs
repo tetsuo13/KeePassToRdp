@@ -1,5 +1,6 @@
-﻿// KeePass to RDP.
-// Copyright (C) 2013  Andrei Nicholson
+﻿#region License
+// KeePass to RDP.
+// Copyright (C) 2013-2014 Andrei Nicholson
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -13,20 +14,14 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#endregion
 
 namespace KeePassToRdp
 {
-    public class ClientSettings
+    public class ComboBoxItem
     {
-        /// <summary>
-        /// Connects you to a session for administering the server.
-        /// </summary>
-        public bool Admin { get; set; }
-
-        /// <summary>
-        /// Runs Remote Desktop in public mode. In public mode, passwords and
-        /// bitmaps are not cached.
-        /// </summary>
-        public bool Public { get; set; }
+        public string DisplayText { get; set; }
+        public int Value { get; set; }
+        public bool IsHeader { get; set; }
     }
 }

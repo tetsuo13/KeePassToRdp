@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeePassToRdp", "KeePassToRdp\KeePassToRdp.csproj", "{B192F261-46B4-4D8B-9E5C-8CE601516BBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeePassToRdp", "KeePassToRdp\KeePassToRdp.csproj", "{A30D7F01-1D24-4D87-86B0-63342B83F4FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -9,10 +9,10 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B192F261-46B4-4D8B-9E5C-8CE601516BBF}.Debug|x86.ActiveCfg = Debug|x86
-		{B192F261-46B4-4D8B-9E5C-8CE601516BBF}.Debug|x86.Build.0 = Debug|x86
-		{B192F261-46B4-4D8B-9E5C-8CE601516BBF}.Release|x86.ActiveCfg = Release|x86
-		{B192F261-46B4-4D8B-9E5C-8CE601516BBF}.Release|x86.Build.0 = Release|x86
+		{A30D7F01-1D24-4D87-86B0-63342B83F4FF}.Debug|x86.ActiveCfg = Debug|x86
+		{A30D7F01-1D24-4D87-86B0-63342B83F4FF}.Debug|x86.Build.0 = Debug|x86
+		{A30D7F01-1D24-4D87-86B0-63342B83F4FF}.Release|x86.ActiveCfg = Release|x86
+		{A30D7F01-1D24-4D87-86B0-63342B83F4FF}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
