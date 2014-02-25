@@ -56,10 +56,7 @@ namespace KeePassToRdp
 
         public void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-        }
-
-        public void LaunchButton_Click(object sender, RoutedEventArgs e)
-        {
+            SetupDatabase(dbFile, false);
         }
 
         private void SetupDatabase(string file, bool loadDb)
@@ -68,9 +65,11 @@ namespace KeePassToRdp
             {
                 ReadDatabase(file, loadDb);
 
-                // TODO: Enable the GroupBox only if there's something to launch.
-                ServerList.IsEnabled = true;
-                LaunchConnectionButton.IsEnabled = false;
+                if (ServerList.Items.Count > 0)
+                {
+                    ServerList.IsEnabled = true;
+                    ToggleOptions(false);
+                }
             }
             catch (KeePassLib.Keys.InvalidCompositeKeyException e)
             {
@@ -94,7 +93,13 @@ namespace KeePassToRdp
             db.Close();
         }
 
-        // http://stackoverflow.com/questions/3544616/wpf-combobox-option-group-optgroup-type-behaviour
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="db"></param>
+        /// <seealso href="https://stackoverflow.com/questions/3544616/wpf-combobox-option-group-optgroup-type-behaviour">
+        /// StackOverflow: WPF ComboBox “option group (optGroup)” type behaviour
+        /// </seealso>
         private void PopulateCombobox(PwDatabase db)
         {
             clients = new Clients();
@@ -162,6 +167,32 @@ namespace KeePassToRdp
         {
             int selectedClientIndex = ((ComboBoxItem)ServerList.SelectedItem).Value;
             Client client = clients.GetClient(selectedClientIndex);
+            ToggleOptions(true, client);
+        }
+
+        private void ToggleOptions(bool enabled)
+        {
+            LaunchConnectionButton.IsEnabled = enabled;
+
+            // Disable firing the checked event while changing the boxes. Only
+            // want to uncheck the boxes for visual response, not change the
+            // setting for the client.
+            CheckBoxAdmin.Checked -= CheckBoxAdmin_Checked;
+            CheckBoxPublic.Checked -= CheckBoxPublic_Checked;
+
+            CheckBoxAdmin.IsEnabled = enabled;
+            CheckBoxAdmin.IsChecked = false;
+            CheckBoxPublic.IsEnabled = enabled;
+            CheckBoxPublic.IsChecked = false;
+
+            CheckBoxAdmin.Checked += CheckBoxAdmin_Checked;
+            CheckBoxPublic.Checked += CheckBoxPublic_Checked;
+        }
+
+        private void ToggleOptions(bool enabled, Client client)
+        {
+            ToggleOptions(enabled);
+
             CheckBoxAdmin.IsChecked = client.settings.Admin;
             CheckBoxPublic.IsChecked = client.settings.Public;
         }
