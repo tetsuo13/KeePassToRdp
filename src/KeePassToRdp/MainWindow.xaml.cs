@@ -114,7 +114,12 @@ namespace KeePassToRdp
                 clients.Add(entry.ParentGroup.GetFullPath(Clients.GroupSeparator, false), entry.Strings);
             }
 
-            ServerList.DataContext = clients.GetComboBoxRange();
+            ServerList.SelectionChanged -= ServerList_SelectionChanged;
+            ServerList.SelectedIndex = -1;
+
+            ServerList.ItemsSource = clients.GetComboBoxRange();
+
+            ServerList.SelectionChanged += ServerList_SelectionChanged;
         }
 
         private PwDatabase InitializeDatabase(string dbPath, bool loadDb)
