@@ -236,7 +236,6 @@ namespace KeePassToRdp
         /// <summary>
         /// String form of the WINDOWSPOS structure.
         /// </summary>
-        /// 
         /// <remarks>
         /// Uses full screen. Opts to put window on second monitor if found.
         /// </remarks>
@@ -248,11 +247,12 @@ namespace KeePassToRdp
             double top = 0;
             double bottom = 0;
 
-            // TODO: There's GOT to be a way of determining if there's two monitors in WPF!
             if (Screen.AllScreens.Length > 1)
             {
-                left = SystemParameters.VirtualScreenLeft;
-                top = SystemParameters.VirtualScreenTop;
+                // TODO: Default to the second monitor. What about a ComboBox of monitor choices for each connection?
+
+                left = Screen.AllScreens[1].Bounds.Left;
+                top = Screen.AllScreens[1].Bounds.Top;
                 bottom = Screen.AllScreens[1].Bounds.Bottom;
             }
             else
