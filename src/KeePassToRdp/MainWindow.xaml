@@ -46,8 +46,8 @@
                         Name="LaunchConnectionButton"
                         VerticalAlignment="Top"
                         IsEnabled="False" />
-                <CheckBox Margin="10,50,10,0" IsEnabled="False" Checked="CheckBoxAdmin_Checked" Name="CheckBoxAdmin">Connects to a session for administering the server</CheckBox>
-                <CheckBox Margin="10,70,10,0" IsEnabled="False" Checked="CheckBoxPublic_Checked" Name="CheckBoxPublic">Runs in public mode, passwords and bitmaps not cached</CheckBox>
+                <CheckBox Margin="10,50,10,0" Padding="5,0,0,0" IsEnabled="False" Checked="CheckBoxAdmin_Checked" Name="CheckBoxAdmin">Connects to a session for administering the server</CheckBox>
+                <CheckBox Margin="10,70,10,0" Padding="5,0,0,0" IsEnabled="False" Checked="CheckBoxPublic_Checked" Name="CheckBoxPublic">Runs in public mode, passwords and bitmaps not cached</CheckBox>
             </Grid>
         </GroupBox>
     </Grid>
