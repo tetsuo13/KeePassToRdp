@@ -16,34 +16,38 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #endregion
 
-using System;
-using System.IO;
+using System.Diagnostics;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace KeePassToRdp
 {
     /// <summary>
-    /// Interaction logic for App.xaml
+    /// Interaction logic for AboutWindow.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class AboutWindow : Window
     {
-        protected override void OnStartup(StartupEventArgs e)
+        public AboutWindow()
         {
-            AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
-                {
-                    const string resourceName = "KeePassToRdp.Resources.KeePassLib.dll";
-                    Assembly assembly = Assembly.GetExecutingAssembly();
+            InitializeComponent();
 
-                    using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-                    {
-                        Byte[] assemblyData = new Byte[stream.Length];
-                        stream.Read(assemblyData, 0, assemblyData.Length);
-                        return Assembly.Load(assemblyData);
-                    }
-                };
+            this.Version.DataContext = new
+            {
+                Version = "Version " + Assembly.GetEntryAssembly().GetName().Version
+            };
 
-            base.OnStartup(e);
+            Assembly kp = Assembly.Load(KeePassToRdp.Properties.Resources.KeePassLib);
+            this.ComponentListView.Items.Add(new
+            {
+                Component = "KeePassLib", Version = kp.GetName().Version.ToString()
+            });
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
         }
     }
 }

@@ -22,8 +22,11 @@ using KeePassLib.Serialization;
 using Microsoft.Win32;
 using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Interop;
 
 namespace KeePassToRdp
 {
@@ -32,13 +35,64 @@ namespace KeePassToRdp
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const Int32 WM_SYSCOMMAND = 0x112;
+        private const Int32 MF_SEPARATOR = 0x800;
+        private const Int32 MF_BYPOSITION = 0x400;
+        private const Int32 MF_STRING = 0x0;
+
+        private const Int32 AboutSysMenuId = 1000;
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+        [DllImport("user32.dll")]
+        private static extern bool InsertMenu(IntPtr hMenu, Int32 wPosition, Int32 wFlags, Int32 wIDNewItem, string lpNewItem);
+
         private CompositeKey key = new CompositeKey();
         private string dbFile;
         private Clients clients;
 
+        /// <summary>
+        /// The Win32 Interop Handle for this Window.
+        /// </summary>
+        public IntPtr Handle
+        {
+            get
+            {
+                return new WindowInteropHelper(this).Handle;
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
+            this.Loaded += new RoutedEventHandler(MainWindow_Loaded);
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            // The handle for the forms system menu.
+            IntPtr systemMenuHandle = GetSystemMenu(this.Handle, false);
+
+            // Add system menu items just after the "Close" menu item.
+            InsertMenu(systemMenuHandle, 7, MF_BYPOSITION | MF_SEPARATOR, 0, String.Empty);
+            InsertMenu(systemMenuHandle, 8, MF_BYPOSITION, AboutSysMenuId, "About KeePassToRDP...");
+
+            HwndSource source = HwndSource.FromHwnd(this.Handle);
+            source.AddHook(new HwndSourceHook(WndProc));
+        }
+
+        private static IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (msg == WM_SYSCOMMAND && wParam.ToInt32() == AboutSysMenuId)
+            {
+                AboutWindow about = new AboutWindow();
+                about.Owner = App.Current.MainWindow;
+                about.ShowDialog();
+                handled = true;
+            }
+
+            return IntPtr.Zero;
         }
 
         public void OpenDbButton_Click(object sender, RoutedEventArgs e)
@@ -212,6 +266,11 @@ namespace KeePassToRdp
         {
             bool isChecked = CheckBoxPublic.IsChecked.HasValue ? CheckBoxPublic.IsChecked.Value : false;
             clients.ChangeSettingPublic(((ComboBoxItem)ServerList.SelectedItem).Value, isChecked);
+        }
+
+        private void CloseButton_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+
         }
     }
 }
