@@ -25,8 +25,8 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Threading;
 
 namespace KeePassToRdp
 {
@@ -151,9 +151,9 @@ namespace KeePassToRdp
         /// 
         /// </summary>
         /// <param name="db"></param>
-        /// <seealso href="https://stackoverflow.com/questions/3544616/wpf-combobox-option-group-optgroup-type-behaviour">
-        /// StackOverflow: WPF ComboBox “option group (optGroup)” type behaviour
-        /// </seealso>
+        /// <see href="https://stackoverflow.com/q/3544616">
+        /// StackOverflow: WPF ComboBox "option group (optGroup)" type behaviour
+        /// </see>
         private void PopulateCombobox(PwDatabase db)
         {
             clients = new Clients();
@@ -214,7 +214,23 @@ namespace KeePassToRdp
 
         private void LaunchButton_Click(object sender, EventArgs e)
         {
-            RdpConnection.Launch(clients.GetClient(((ComboBoxItem)ServerList.SelectedItem).Value));
+            ToggleUsage(false);
+
+            RdpConnection connection = new RdpConnection();
+            connection.Launch(clients.GetClient(((ComboBoxItem)ServerList.SelectedItem).Value));
+
+            DispatcherTimer timer = new DispatcherTimer()
+            {
+                Interval = TimeSpan.FromSeconds(5)
+            };
+
+            timer.Start();
+            timer.Tick += (s, args) =>
+            {
+                ToggleUsage(true);
+                timer.Stop();
+                connection.Cleanup();
+            };
         }
 
         private void RefreshButton_Click(object sender, EventArgs e)
@@ -227,6 +243,16 @@ namespace KeePassToRdp
             int selectedClientIndex = ((ComboBoxItem)ServerList.SelectedItem).Value;
             Client client = clients.GetClient(selectedClientIndex);
             ToggleOptions(true, client);
+        }
+
+        private void ToggleUsage(bool enabled)
+        {
+            OpenDatabaseButton.IsEnabled = enabled;
+            RefreshButton.IsEnabled = enabled;
+            LaunchConnectionButton.IsEnabled = enabled;
+            ServerList.IsEnabled = enabled;
+            CheckBoxAdmin.IsEnabled = enabled;
+            CheckBoxPublic.IsEnabled = enabled;
         }
 
         private void ToggleOptions(bool enabled)
@@ -266,11 +292,6 @@ namespace KeePassToRdp
         {
             bool isChecked = CheckBoxPublic.IsChecked.HasValue ? CheckBoxPublic.IsChecked.Value : false;
             clients.ChangeSettingPublic(((ComboBoxItem)ServerList.SelectedItem).Value, isChecked);
-        }
-
-        private void CloseButton_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-
         }
     }
 }

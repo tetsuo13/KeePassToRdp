@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows;
 using System.Windows.Forms;
 
@@ -32,14 +31,17 @@ namespace KeePassToRdp
     /// </summary>
     public class RdpConnection
     {
-        public static void Launch(Client c)
-        {
-            string rdpFile = "";
+        /// <summary>
+        /// Path to RDP file.
+        /// </summary>
+        private string rdpFile = String.Empty;
 
+        public void Launch(Client c)
+        {
             try
             {
                 rdpFile = CreateRdpFile(c);
-                LaunchRdc(rdpFile);
+                LaunchRdc();
             }
             catch (Exception e)
             {
@@ -56,8 +58,7 @@ namespace KeePassToRdp
         /// elsewhere and saved. Contains login credentials, so this file
         /// should be treated as a security risk and deleted immediately.
         /// </remarks>
-        /// <param name="rdpFile">Path to RDP file</param>
-        private static void LaunchRdc(string rdpFile)
+        private void LaunchRdc()
         {
             ProcessStartInfo processInfo = new ProcessStartInfo("mstsc.exe")
             {
@@ -67,22 +68,27 @@ namespace KeePassToRdp
                 Arguments = String.Format(@"""{0}""", rdpFile)
             };
 
-            using (Process process = Process.Start(processInfo))
-            {
-                Thread.Sleep(5000);
+            Process process = Process.Start(processInfo);
+        }
 
+        /// <summary>
+        /// Remove any temporary files used.
+        /// </summary>
+        public void Cleanup()
+        {
+            if (!String.IsNullOrEmpty(rdpFile))
+            {
                 try
                 {
                     File.Delete(rdpFile);
                 }
                 catch (Exception)
                 {
-                    // Let OS prune it eventually.
                 }
             }
         }
 
-        private static string CreateRdpFile(Client c)
+        private string CreateRdpFile(Client c)
         {
             List<string> contents = new List<string>() {
                 "screen mode id:i:2",
@@ -153,7 +159,7 @@ namespace KeePassToRdp
         /// <param name="client">Client with settings to check</param>
         /// <param name="url">URL to start with</param>
         /// <returns></returns>
-        private static string FullAddress(Client client, string url)
+        private string FullAddress(Client client, string url)
         {
             List<string> fullAddress = new List<string>() { url };
 
@@ -183,7 +189,7 @@ namespace KeePassToRdp
         /// <param name="clientName">Client name</param>
         /// <param name="clientAddress">IP address of client</param>
         /// <returns>Filename used for RDC connection</returns>
-        private static string UniqueConnectionFileName(string clientName, string clientAddress)
+        private string UniqueConnectionFileName(string clientName, string clientAddress)
         {
             // Replace characters which will cause issues for the file name.
             string filenameSafeClientName = clientName.Replace('.', '-');
@@ -240,7 +246,7 @@ namespace KeePassToRdp
         /// Uses full screen. Opts to put window on second monitor if found.
         /// </remarks>
         /// <returns></returns>
-        private static string WindowPosition()
+        private string WindowPosition()
         {
             List<double> winposstr = new List<double>() { 2 };
             double left = 0;
