@@ -125,13 +125,10 @@ namespace KeePassToRdp
                     ToggleOptions(false);
                 }
             }
-            catch (KeePassLib.Keys.InvalidCompositeKeyException e)
-            {
-                MessageBox.Show(e.Message);
-            }
             catch (Exception e)
             {
                 MessageBox.Show(e.Message);
+                key = new CompositeKey();
             }
         }
 
