@@ -47,6 +47,12 @@ namespace KeePassToRdp
         /// </summary>
         public const string GroupSeparator = " / ";
 
+        /// <summary>
+        /// UUID of the recycle bin parent group when the database is using
+        /// it.
+        /// </summary>
+        public PwUuid RecycleBinUuid { get; set; }
+
         private readonly Regex TokenMatch;
 
         private SortedList<string, List<Client>> clientList;
@@ -141,12 +147,15 @@ namespace KeePassToRdp
         /// <returns>True if entry appears to represent RDP info</returns>
         public bool ValidRdpEntry(PwEntry entry)
         {
-            if (EntryStringContainsToken(entry))
+            if (RecycleBinUuid != null && entry.ParentGroup.Uuid.Equals(RecycleBinUuid))
+            {
+                return false;
+            }
+            else if (EntryStringContainsToken(entry))
             {
                 return true;
             }
-
-            if (EntryTagsContainToken(entry))
+            else if (EntryTagsContainToken(entry))
             {
                 return true;
             }

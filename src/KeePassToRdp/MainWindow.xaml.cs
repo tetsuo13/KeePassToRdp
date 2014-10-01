@@ -155,14 +155,17 @@ namespace KeePassToRdp
         {
             clients = new Clients();
 
+            if (db.RecycleBinEnabled)
+            {
+                clients.RecycleBinUuid = db.RecycleBinUuid;
+            }
+
             foreach (PwEntry entry in db.RootGroup.GetEntries(true))
             {
-                if (!clients.ValidRdpEntry(entry))
+                if (clients.ValidRdpEntry(entry))
                 {
-                    continue;
+                    clients.Add(entry.ParentGroup.GetFullPath(Clients.GroupSeparator, false), entry.Strings);
                 }
-
-                clients.Add(entry.ParentGroup.GetFullPath(Clients.GroupSeparator, false), entry.Strings);
             }
 
             ServerList.SelectionChanged -= ServerList_SelectionChanged;
