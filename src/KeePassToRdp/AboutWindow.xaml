@@ -11,7 +11,7 @@
             <TextBlock HorizontalAlignment="Center">Copyright 2013-2014 Andrei Nicholson</TextBlock>
             <TextBlock Name="Version" Padding="0,0,0,10" HorizontalAlignment="Center" Text="{Binding Version}" />
             <TextBlock Padding="0,0,0,10" HorizontalAlignment="Center">
-                <Hyperlink NavigateUri="https://github.com/tetsuo13/KeePassToRdp" RequestNavigate="Hyperlink_RequestNavigate">
+                <Hyperlink NavigateUri="https://github.com/tetsuo13/KeePassToRdp" ToolTip="https://github.com/tetsuo13/KeePassToRdp" RequestNavigate="Hyperlink_RequestNavigate">
                     Web site
                 </Hyperlink>
             </TextBlock>
